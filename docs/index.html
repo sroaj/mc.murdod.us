@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Server Status</title>
+</head>
+<body>
+<h1 id="serverName"></h1>
+<h1 id="online">Loading Server...</h1>
+<p>Last Updated: <span id="lastUpdate"></span></p>
+<p id="version">Loading Minecraft Version...</p>
+<p id="serverVersion">Loading Server Version...</p>
+<p>Player count: <span id="playerListHTML">Loading player count...</span></p>
+<script>
+(function(f){
+    var h="//mcapi.us/server/status?"
+    var k=Object.keys(f).map(
+        function(B){
+            return encodeURIComponent(B)+"="+encodeURIComponent(f[B])
+        }
+    ).join("&");
+    var e=new XMLHttpRequest;
+    document.getElementById("serverName").textContent=f["ip"] + ":" + f["port"];
+    e.open("GET",h+k,!0);
+    e.onload=function(B){
+        if(200!==this.status)
+            return console.error("Error loading server status");
+        var a=JSON.parse(this.response);
+        if ("success"==a.status && a.online) {
+            var b=a.server.name;
+            var c=a.motd;
+            var d="Server is online!";
+            var e= new Date(parseInt(a.last_updated*1000));
+            var a=a.players.now + "/" + a.players.max;
+        } else {
+            var a = b = c = e = "Offine";
+            var d = "Server is not online! Please try again later";
+        }
+        document.getElementById("version").textContent="Minecraft Version: "+b;
+        document.getElementById("serverVersion").textContent="Server MoTD: "+c;
+        document.getElementById("online").textContent=d;
+        document.getElementById("playerListHTML").textContent=a;
+        document.getElementById("lastUpdate").textContent=e;
+    }
+    e.send()
+})({ip: 'jonny2112.ddns.net', port: '25564' });
+</script>
+</body>
+</html>
