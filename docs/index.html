@@ -26,7 +26,7 @@
         if(200!==this.status)
             return console.error("Error loading server status");
         var a=JSON.parse(this.response);
-        if ("success"==a.status) {
+        if ("success"==a.status && a.players.max) {
             var b=a.server.name;
             var c=a.motd;
             var d="Server is online!";
